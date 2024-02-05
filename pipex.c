@@ -3,28 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/01/30 17:36:55 by marvin           ###   ########.fr       */
+/*   Updated: 2024/02/05 12:33:32 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "pipex.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 static int	strings_count(char **str)
 {
 	char	**save;
 
+	if (!str)
+		return (-1);
 	save = str;
 	while (*str)
 		str++;
@@ -85,178 +88,157 @@ static void	show_err(char *argv)
 	free_double(cmd);
 }
 
-static char	*cmd_path(char **argv, char **env)
+static char	*cmd_path(char *argv, char **env)
 {
 	int		paths_num;
 	char	**cmd;
 	char	**paths;
-	char	*err;
-	char	**errs;
 	char	*fullpath;
 	int		i;
 
 	i = 0;
+	fullpath = NULL;
 	paths = get_env_paths(env);
 	paths_num = strings_count(paths);
-	cmd = ft_split(*(argv), ' ');
+	if (paths_num == -1)
+		return (NULL);
+	cmd = ft_split(argv, ' ');
 	if (!*cmd)
 		return (ft_strdup(""));
-	if (*(*argv) == '/' && access(*cmd, X_OK) == 0)
+	if (*argv == '/' && access(*cmd, X_OK) == 0)
 		return (ft_strdup(*cmd));
 	else
-		while (paths_num-- > 0)
-		{
+	{
+		while (paths_num-- > 0 && !fullpath)
 			fullpath = check_path(paths[i++], *cmd);
-			if (fullpath)
-				return (fullpath);
-		}
-	show_err(*argv);
+		return (fullpath);
+	}
+	show_err(argv);
 	exit(1);
 }
 
-void	child(char *infile, char **argv_copy, char **env, int *pipefd)
+t_fd	open_fds(int argc, char **argv)
 {
-	char	**cmd;
-	char	*founded_path;
-	int		infile_fd;
-	char	*cat[2];
+	t_fd	fd;
 
-	cat[0] = "cat";
-	cat[1] = NULL;
-	infile_fd = open(infile, O_RDONLY);
-	if (infile_fd < 0)
-	{
-		ft_putstr_fd("pipex: no such file or directory: ", 2);
-		ft_putstr_fd(infile, 2);
-		write(2, "\n", 1);
-		exit(1);
-	}
-	cmd = ft_split(*argv_copy, ' ');
-	founded_path = cmd_path(argv_copy, env);
-	close(pipefd[0]);
-	dup2(infile_fd, 0);
-	dup2(pipefd[1], 1);
-	if (*(*argv_copy) == '\0')
-		execve(cmd_path(cat, env), cat, NULL);
-	execve(founded_path, cmd, NULL);
-	close(pipefd[1]);
-}
-
-void	parent(char *outfile, char **argv_copy, char **env, int *pipefd)
-{
-	char	**cmd;
-	char	*founded_path;
-	int		outfile_fd;
-	int 	check;
-	char	*cat[2];
-
-	cat[0] = "cat";
-	cat[1] = NULL;
-
-	outfile_fd = open(outfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (outfile_fd < 0)
+	fd.outfile = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (fd.outfile < 0)
 	{
 		ft_putstr_fd("pipex: permission denied: ", 2);
-		ft_putstr_fd(outfile, 2);
+		ft_putstr_fd(argv[argc - 1], 2);
 		write(2, "\n", 1);
 		exit(1);
 	}
-	argv_copy++;
-	founded_path = cmd_path(argv_copy, env);
-	cmd = ft_split(*argv_copy, ' ');
-	check = dup2(outfile_fd, 1);
-	if (check == -1)
+	fd.infile = open(argv[1], O_RDONLY);
+	if (fd.infile < 0)
 	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
+		ft_putstr_fd("pipex: no such file or directory: ", 2);
+		ft_putstr_fd(argv[1], 2);
+		write(2, "\n", 1);
+		exit(INFILE_NOT_FOUND);
 	}
-	check = dup2(pipefd[0], 0);
-	if (check == -1)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
-	}
-	if (*(*argv_copy) == '\0')
-		execve(cmd_path(cat, env), cat, NULL);
-	execve(founded_path, cmd, NULL);
-	close(pipefd[0]);
-	close(pipefd[1]);
+	return (fd);
 }
 
-void to_pipe(char **argv_copy , char **env , int *pipefd , int cmds)
+void	dup_2(int old, int new)
 {
-	char	**cmd;
-	char	*founded_path;
+	if (dup2(old, new) < 0)
+	{
+		perror("dup2 failed");
+		exit(errno);
+	}
+	close(old);
+}
+
+void	fd_manager(t_fd fd, int mod, int *pfd)
+{
+	if (mod == LAST_CMD)
+	{
+		dup_2(fd.outfile, 1);
+		close(pfd[1]);
+	}
+	else
+	{
+		dup_2(pfd[1], 1);
+		close(fd.outfile);
+	}
+}
+
+void	open_pipe(int *pfd)
+{
+	if (pipe(pfd))
+	{
+		perror("pipe:");
+		exit(errno);
+	}
+}
+
+void	call_execev(char **env, char **cmd, char *argv, char *founded_path)
+{
 	char	*cat[2];
-	int 	id;
-	int 	check;
 
 	cat[0] = "cat";
 	cat[1] = NULL;
-	while (cmds-- > 0)
+	if (*argv == '\0')
+		execve(cmd_path("cat", env), cat, NULL);
+	else
+		execve(founded_path, cmd, NULL);
+}
+
+void	child(t_fd fd, char *argv, char **env, int mod)
+{
+	char	**cmd;
+	char	*founded_path;
+	int		id;
+	int		pfd[2];
+
+	open_pipe(pfd);
+	id = fork();
+	if (id == 0)
 	{
-		argv_copy++;
-		founded_path = cmd_path(argv_copy, env);
-		cmd = ft_split(*argv_copy, ' ');
-		id = fork();
-		check = dup2(pipefd[1], 1);
-		if (check == -1)
-		{
-			ft_putstr_fd(strerror(errno), 2);
-			exit(1);
-		}
-		check = dup2(pipefd[0], 0);
-		if (check == -1)
-		{
-			ft_putstr_fd(strerror(errno), 2);
-			exit(1);
-		}
-		if (id == 0)
-		{
-			if (*(*argv_copy) == '\0')
-				execve(cmd_path(cat, env), cat, NULL);
-			execve(founded_path, cmd, NULL);
-		}
-			free(founded_path);
-			free_double(cmd);
+		cmd = ft_split(argv, ' ');
+		founded_path = cmd_path(argv, env);
+		fd_manager(fd, mod, pfd);
+		call_execev(env, cmd, argv, founded_path);
 	}
-	close(pipefd[0]);
-	close(pipefd[1]);
+	else
+	{
+		close(pfd[1]);
+		wait(NULL);
+		dup_2(pfd[0], 0);
+	}
 }
 
 int	main(int argc, char **argv, char **env)
-		// ./pipex inputfile1 cmd1 cmd2 .... outputfile2 // execv(path,)
 {
-	char	**argv_copy;
 	int		id;
-	int		pipefd[2];
 	int		cmds;
+	t_fd	fd;
+	int		i;
+	char 	*buffer;
+	char	*read_buf;
 
-	cmds = argc - (5); // ./a.out infile cmd1 cmd2 cmd3 cmd4 cmd5 cmd6 outfile 
-	argv_copy = argv;
-	argv_copy += 2;
-	if (pipe(pipefd))
-		return (ft_putstr_fd(strerror(errno), 2), errno);
+	buffer  = ft_strnstr(argv[1],"here_doc",strlen(argv[1]));
+	read	
+	i = 0;
 	if (argc < 5)
 		return (ft_putstr_fd("Not enough arguments !\n", 2), 1);
-	id = fork();
-	if (id < 0)
-		return (ft_putstr_fd(strerror(errno), 2), errno);
-	if (id == 0)
-		child(argv[1], argv_copy, env, pipefd);
-	else
+	if (buffer)
 	{
-		if (cmds > 0)
-			to_pipe(argv_copy , env , pipefd , cmds);
-		// wait(NULL);		// to_pipe(argv_copy ,env , pipefd ,cmds);
-		argv_copy += cmds;
-		parent(argv[argc - 1], argv_copy, env, pipefd);	
+		write(1,"herdoc> ",sizeof("herdoc> "));
+		while(read(0,NULL,strlen(buffer)) > 0)
+			printf("hello\n");
 	}
+	if (buffer)
+		i+=1;
+	i += 2;
+	cmds = argc - (4);
+	fd = open_fds(argc, argv);
+	dup_2(fd.infile, 0);
+	while (cmds--)
+		child(fd, argv[i++], env, 0);
+	child(fd, argv[i], env, 1);
+	while (waitpid(-1, NULL, 0) != -1)
+		;
+	return (0);
 }
-
-// if (!fullpath)
-// {
-//     free(a_path);
-//     ft_putstr_fd("pipex: permission denied:\n",2);
-//     exit(1);
-// }
