@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 09:30:18 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/07 10:22:45 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,10 +143,10 @@ int	infile(t_fd *fd, char **argv)
 	fd->infile = open(argv[1], O_RDONLY);
 	if (fd->infile < 0)
 	{
-		if (access(argv[1], R_OK))
-			print_err("pipex: permission denied: ", argv[1]);
-		else
+		if (access(argv[1], F_OK))
 			print_err("pipex: no such file or directory: ", argv[1]);
+		else
+			print_err("pipex: permission denied: ", argv[1]);
 		return (-1);
 	}
 	return (0);
@@ -180,12 +180,17 @@ static t_fd	open_fds(int argc, char **argv, int her_doc_check)
 		return (open_fds_doc(argc, argv));
 }
 
-void	dup_2(int old, int new)
+void	dup_2(int old, int new , int mod)
 {
 	if (dup2(old, new) < 0)
 	{
-		perror("dup2 failed");
-		exit(errno);
+		if (mod == 0)
+			perror("dup2 -> infile ");
+		if (mod == 1)
+			perror("dup2 -> outfile ");
+		if (mod == 2)
+			perror("dup2 -> pipe ");
+		// exit(errno);
 	}
 	close(old);
 }
@@ -194,13 +199,13 @@ void	fd_duper(t_fd fd, int mod, int *pfd)
 {
 	if (mod == LAST_CMD)
 	{
-		dup_2(fd.outfile, 1);
+		dup_2(fd.outfile, 1, 1);
 		close(pfd[1]);
 		close(pfd[0]);
 	}
 	else
 	{
-		dup_2(pfd[1], 1);
+		dup_2(pfd[1], 1, 3);
 		close(fd.outfile);
 		close(pfd[0]);
 	}
@@ -261,7 +266,14 @@ char **get_command(char *argv) // argv : "grep 'hello' "
 	return (cmd);
 }
 
-void	call_execev(char **env, char *argv)
+	// fprintf(stderr,"argv :|%s|\n",argv);
+	// while (cmd[i])
+	// {
+	// 	fprintf(stderr,"%s\n",cmd[i]);
+	// 	i++;
+	// }
+		// exit(200);
+void	call_execev(char **env, char *argv , t_fd fd)
 {
 	char	*cat[2];
 	char 	*founded_path;
@@ -269,16 +281,11 @@ void	call_execev(char **env, char *argv)
 	int		i = 0;
 
 	cmd = get_command(argv);
-	fprintf(stderr,"argv :|%s|\n",argv);
-	while (cmd[i])
-	{
-		fprintf(stderr,"%s\n",cmd[i]);
-		i++;
-	}
-		// exit(200);
 	founded_path = cmd_path(argv, env);
-	if (!founded_path)
+	if (!founded_path && !fd.check_in)
 		show_err(argv);
+	else if (!founded_path)
+		exit(EXIT_FAILURE);
 	cat[0] = "cat";
 	cat[1] = NULL;
 	if (*argv == '\0')
@@ -300,12 +307,12 @@ void	child(t_fd fd, char *argv, char **env, int mod)
 	if (id == 0)
 	{
 		fd_duper(fd, mod, pfd);
-		call_execev(env, argv);
+		call_execev(env, argv , fd);
 	}
 	else
 	{
 		close(pfd[1]);
-		dup_2(pfd[0], 0);
+		dup_2(pfd[0], 0, 3);
 	}
 }
 
@@ -351,10 +358,10 @@ int	main(int argc, char **argv, char **env)
 	here_doc_check = here_doc(argv, &i, &cmds);
 	i += 2;
 	fd = open_fds(argc, argv, here_doc_check);
-	if (fd.check_in || fd.check_out)
+	if (fd.check_out)
 		return (1);
 	if (!here_doc_check)
-		dup_2(fd.infile, 0);
+		dup_2(fd.infile, 0, 0);
 	while (cmds--)
 		child(fd, argv[i++], env, 0);
 	child(fd, argv[i], env, 1);
