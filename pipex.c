@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/06 18:53:05 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/07 09:30:18 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,17 +190,19 @@ void	dup_2(int old, int new)
 	close(old);
 }
 
-void	fd_manager(t_fd fd, int mod, int *pfd)
+void	fd_duper(t_fd fd, int mod, int *pfd)
 {
 	if (mod == LAST_CMD)
 	{
 		dup_2(fd.outfile, 1);
 		close(pfd[1]);
+		close(pfd[0]);
 	}
 	else
 	{
 		dup_2(pfd[1], 1);
 		close(fd.outfile);
+		close(pfd[0]);
 	}
 }
 
@@ -213,10 +215,70 @@ void	open_pipe(int *pfd)
 	}
 }
 
-void	call_execev(char **env, char **cmd, char *argv, char *founded_path)
+char 	*search_replace(char *string , int target, int substitute)
+{
+	int		i;
+	int		apostrophes;
+	int		len;
+
+	apostrophes = 0;
+	i = 0;
+	
+	while((string)[i])
+	{
+		fprintf(stderr,"char is '%c'\n",(string)[i]);
+		if ((string)[i] == target)
+			apostrophes++;
+		i++;
+	}
+	i = 0;
+	len = ft_strlen(string) - apostrophes;
+	while((string)[i])
+	{
+		while (string[i] != 39)
+		fprintf(stderr,"char is '%c'\n",(string)[i]);
+			
+		i++;
+	}
+	return (string);
+}
+
+char **get_command(char *argv) // argv : "grep 'hello' "
+{
+	char	**cmd;
+	char 	*tmp;
+	int		apostrophe;
+	int		args;
+
+	apostrophe = 0;
+	if (ft_strchr(argv, 39))
+			apostrophe = 1;
+	if (apostrophe)
+	{
+		tmp = search_replace(argv , 39, 34);
+	}
+	cmd = ft_split(argv, ' ');
+	return (cmd);
+}
+
+void	call_execev(char **env, char *argv)
 {
 	char	*cat[2];
+	char 	*founded_path;
+	char	**cmd;
+	int		i = 0;
 
+	cmd = get_command(argv);
+	fprintf(stderr,"argv :|%s|\n",argv);
+	while (cmd[i])
+	{
+		fprintf(stderr,"%s\n",cmd[i]);
+		i++;
+	}
+		// exit(200);
+	founded_path = cmd_path(argv, env);
+	if (!founded_path)
+		show_err(argv);
 	cat[0] = "cat";
 	cat[1] = NULL;
 	if (*argv == '\0')
@@ -229,21 +291,16 @@ void	call_execev(char **env, char **cmd, char *argv, char *founded_path)
 
 void	child(t_fd fd, char *argv, char **env, int mod)
 {
-	char	**cmd;
 	char	*founded_path;
 	int		id;
 	int		pfd[2];
-
+	
 	open_pipe(pfd);
 	id = fork();
 	if (id == 0)
 	{
-		cmd = ft_split(argv, ' ');
-		founded_path = cmd_path(argv, env);
-		if (!founded_path)
-			show_err(argv);
-		fd_manager(fd, mod, pfd);
-		call_execev(env, cmd, argv, founded_path);
+		fd_duper(fd, mod, pfd);
+		call_execev(env, argv);
 	}
 	else
 	{
@@ -255,12 +312,12 @@ void	child(t_fd fd, char *argv, char **env, int mod)
 int	here_doc(char **argv, int *i, int *cmds)
 {
 	int		pipetimes;
-	char	*doc;
+	int		doc;
 	char	read_buf[(MAX_INPUT + 1)];
 
-	doc = ft_strnstr(argv[1], "here_doc", ft_strlen(argv[1]));
+	doc = ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1]));
 	read_buf[0] = '\0';
-	if (doc)
+	if (!doc)
 	{
 		while (ft_strncmp(argv[2], read_buf, ft_strlen(argv[2])))
 		{
