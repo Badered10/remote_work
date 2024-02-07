@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 10:22:45 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/07 12:03:05 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,26 @@ static void	print_err(char *message, char *word)
 	ft_putstr_fd(word, 2);
 	write(2, "\n", 1);
 }
+int	dup_2(int old, int new, int mod)
+{
+	if (dup2(old, new) < 0)
+	{
+		if (mod == 0)
+			perror("dup2 -> infile ");
+		if (mod == 1)
+			perror("dup2 -> outfile ");
+		if (mod == 2)
+			perror("dup2 -> pipe ");
+			return(-1);
+	}
+	close(old);
+	return (0);
+}
 
 static t_fd	open_fds_doc(int argc, char **argv)
 {
 	t_fd	doc_fd;
+	int		fd1;
 
 	doc_fd.outfile = open(argv[argc - 1], O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (doc_fd.outfile < 0)
@@ -133,8 +149,13 @@ static t_fd	open_fds_doc(int argc, char **argv)
 			print_err("pipex: no such file or directory: ", argv[argc - 1]);
 		else
 			print_err("pipex: permission denied: ", argv[argc - 1]);
+		doc_fd.check_out = -1;
 		exit(EXIT_FAILURE);
 	}
+	fd1 = open("tmp.txt",O_CREAT | O_RDONLY , 0777);
+		dup_2(fd1, 0, 0);
+	doc_fd.check_out = 0;
+	doc_fd.check_in = 0;
 	return (doc_fd);
 }
 
@@ -166,48 +187,45 @@ int	outfile(int argc, t_fd *fd, char **argv)
 	return (0);
 }
 
-static t_fd	open_fds(int argc, char **argv, int her_doc_check)
+
+
+static t_fd	open_fds(int argc, char **argv, int here_doc_check)
 {
 	t_fd	fd;
-
-	if (!her_doc_check)
+	int		fd1;
+	if (!here_doc_check)
 	{
 		fd.check_in = infile(&fd, argv);
 		fd.check_out = outfile(argc, &fd, argv);
+		if (fd.check_out)
+			exit(EXIT_FAILURE);
+		if (!fd.check_in)
+			dup_2(fd.infile, 0, 0);
+		else
+		{
+			fd1 = open("tmp.txt",O_CREAT | O_RDONLY , 0777);
+			dup_2(fd1, 0, 0);
+		}
 		return (fd);
 	}
 	else
 		return (open_fds_doc(argc, argv));
 }
-
-void	dup_2(int old, int new , int mod)
-{
-	if (dup2(old, new) < 0)
-	{
-		if (mod == 0)
-			perror("dup2 -> infile ");
-		if (mod == 1)
-			perror("dup2 -> outfile ");
-		if (mod == 2)
-			perror("dup2 -> pipe ");
-		// exit(errno);
-	}
-	close(old);
-}
-
 void	fd_duper(t_fd fd, int mod, int *pfd)
 {
 	if (mod == LAST_CMD)
 	{
-		dup_2(fd.outfile, 1, 1);
 		close(pfd[1]);
 		close(pfd[0]);
+		if(dup_2(fd.outfile, 1, 1))
+			exit(EXIT_FAILURE);
 	}
 	else
 	{
-		dup_2(pfd[1], 1, 3);
 		close(fd.outfile);
 		close(pfd[0]);
+		if(dup_2(pfd[1], 1, 3))
+			exit(EXIT_FAILURE);
 	}
 }
 
@@ -220,65 +238,19 @@ void	open_pipe(int *pfd)
 	}
 }
 
-char 	*search_replace(char *string , int target, int substitute)
-{
-	int		i;
-	int		apostrophes;
-	int		len;
-
-	apostrophes = 0;
-	i = 0;
-	
-	while((string)[i])
-	{
-		fprintf(stderr,"char is '%c'\n",(string)[i]);
-		if ((string)[i] == target)
-			apostrophes++;
-		i++;
-	}
-	i = 0;
-	len = ft_strlen(string) - apostrophes;
-	while((string)[i])
-	{
-		while (string[i] != 39)
-		fprintf(stderr,"char is '%c'\n",(string)[i]);
-			
-		i++;
-	}
-	return (string);
-}
-
-char **get_command(char *argv) // argv : "grep 'hello' "
+char	**get_command(char *argv) // argv : "grep 'hello' "
 {
 	char	**cmd;
-	char 	*tmp;
-	int		apostrophe;
-	int		args;
 
-	apostrophe = 0;
-	if (ft_strchr(argv, 39))
-			apostrophe = 1;
-	if (apostrophe)
-	{
-		tmp = search_replace(argv , 39, 34);
-	}
 	cmd = ft_split(argv, ' ');
 	return (cmd);
 }
 
-	// fprintf(stderr,"argv :|%s|\n",argv);
-	// while (cmd[i])
-	// {
-	// 	fprintf(stderr,"%s\n",cmd[i]);
-	// 	i++;
-	// }
-		// exit(200);
-void	call_execev(char **env, char *argv , t_fd fd)
+void	call_execev(char **env, char *argv, t_fd fd)
 {
 	char	*cat[2];
-	char 	*founded_path;
+	char	*founded_path;
 	char	**cmd;
-	int		i = 0;
 
 	cmd = get_command(argv);
 	founded_path = cmd_path(argv, env);
@@ -301,13 +273,13 @@ void	child(t_fd fd, char *argv, char **env, int mod)
 	char	*founded_path;
 	int		id;
 	int		pfd[2];
-	
+
 	open_pipe(pfd);
 	id = fork();
 	if (id == 0)
 	{
 		fd_duper(fd, mod, pfd);
-		call_execev(env, argv , fd);
+		call_execev(env, argv, fd);
 	}
 	else
 	{
@@ -334,10 +306,9 @@ int	here_doc(char **argv, int *i, int *cmds)
 			write(1, "heredoc> ", sizeof("heredoc> "));
 			read(0, read_buf, MAX_INPUT);
 			read_buf[MAX_INPUT] = 0;
-			pipetimes = (*cmds);
 		}
-		(*i) += 1;
-		(*cmds)--;
+		(*i) ++;
+		(*cmds) --;
 		return (1);
 	}
 	*i = 0;
@@ -351,6 +322,7 @@ int	main(int argc, char **argv, char **env)
 	t_fd	fd;
 	int		i;
 	int		here_doc_check;
+	int 	fd1;
 
 	if (argc < 5)
 		return (ft_putstr_fd("Not enough arguments !\n", 2), 1);
@@ -358,10 +330,6 @@ int	main(int argc, char **argv, char **env)
 	here_doc_check = here_doc(argv, &i, &cmds);
 	i += 2;
 	fd = open_fds(argc, argv, here_doc_check);
-	if (fd.check_out)
-		return (1);
-	if (!here_doc_check)
-		dup_2(fd.infile, 0, 0);
 	while (cmds--)
 		child(fd, argv[i++], env, 0);
 	child(fd, argv[i], env, 1);
@@ -369,5 +337,57 @@ int	main(int argc, char **argv, char **env)
 		;
 	if (!cmd_path(argv[argc - 2], env))
 		return (NOT_FOUND);
+	unlink("tmp.txt");
+	system("leaks a.out");
 	return (0);
 }
+
+
+// fprintf(stderr,"argv :|%s|\n",argv);
+// while (cmd[i])
+// {
+// 	fprintf(stderr,"%s\n",cmd[i]);
+// 	i++;
+// }
+// exit(200);
+// int		i = 0;
+
+// char 	*search_replace(char *string , int target, int substitute)
+// {
+// 	int		i;
+// 	int		apostrophes;
+// 	int		len;
+
+// 	apostrophes = 0;
+// 	i = 0;
+
+// 	while((string)[i])
+// 	{
+// 		fprintf(stderr,"char is '%c'\n",(string)[i]);
+// 		if ((string)[i] == target)
+// 			apostrophes++;
+// 		i++;
+// 	}
+// 	i = 0;
+// 	len = ft_strlen(string) - apostrophes;
+// 	while((string)[i])
+// 	{
+// 		while (string[i] != 39)
+// 		fprintf(stderr,"char is '%c'\n",(string)[i]);
+
+// 		i++;
+// 	}
+// 	return (string);
+// }
+
+// char 	*tmp;
+// int		apostrophe;
+// int		args;
+
+// apostrophe = 0;
+// if (ft_strchr(argv, 39))
+// 		apostrophe = 1;
+// if (apostrophe)
+// {
+// 	tmp = search_replace(argv , 39, 34);
+// }
