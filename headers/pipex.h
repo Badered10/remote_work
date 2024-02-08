@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 18:00:07 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/08 22:40:06 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ typedef struct s_openfd
 	int	outfile;
 }				t_fd;
 
-void	call_execev(char **env, char *argv, t_fd fd);
+void	call_execev(char **env, char *argv);
 char	*check_path(char *path, char *cmd);
 void	child(t_fd fd, char *argv, char **env, int mod);
 char	*cmd_path(char *argv, char **env);
 int		creat_infile_fd(t_fd *fd, char **argv);
-int		creat_outfile_fd(int argc, t_fd *fd, char **argv);
+int		creat_outfile_fd(int argc, t_fd *fd, char **argv, char **env);
 int		dup_2(int old, int new, int mod);
 void	fd_duper(t_fd fd, int mod, int *pfd);
 void	free_double(char **ptr);
@@ -49,7 +49,7 @@ char	**get_command(char *argv);
 char	**get_env_paths(char **env);
 int		here_doc(char **argv, int *i, int *cmds);
 t_fd	open_fds_doc(int argc, char **argv);
-t_fd	open_fds(int argc, char **argv, int here_doc_check);
+t_fd	open_fds(int argc,char **argv, char **env ,int here_doc_check);
 void	open_pipe(int *pfd);
 void	print_err(char *message, char *word);
 void	show_err(char *argv);

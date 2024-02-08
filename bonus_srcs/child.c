@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:14:27 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 18:00:39 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/08 21:31:50 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	child(t_fd fd, char *argv, char **env, int mod)
 	if (id == 0)
 	{
 		fd_duper(fd, mod, pfd);
-		call_execev(env, argv, fd);
+		call_execev(env, argv);
 	}
 	else
 	{

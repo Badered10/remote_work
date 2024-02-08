@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:02:29 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 17:57:29 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/07 23:03:47 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	free_double(char **ptr)
 {
-	char	**save;
+	int i;
 
-	save = ptr;
-	while (*save)
+	i  = 0;
+	while (ptr[i])
 	{
-		free(*save);
-		save++;
+		free(ptr[i]);
+		i++;
 	}
 	free(ptr);
 }

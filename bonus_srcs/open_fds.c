@@ -6,13 +6,13 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:11:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 18:01:56 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/08 22:44:35 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/pipex.h"
 
-t_fd	open_fds(int argc, char **argv, int here_doc_check)
+t_fd	open_fds(int argc,char **argv, char **env ,int here_doc_check)
 {
 	t_fd	fd;
 	int		fd1;
@@ -20,7 +20,7 @@ t_fd	open_fds(int argc, char **argv, int here_doc_check)
 	if (!here_doc_check)
 	{
 		fd.check_in = creat_infile_fd(&fd, argv);
-		fd.check_out = creat_outfile_fd(argc, &fd, argv);
+		fd.check_out = creat_outfile_fd(argc, &fd, argv, env);
 		if (fd.check_out)
 			exit(EXIT_FAILURE);
 		if (!fd.check_in)

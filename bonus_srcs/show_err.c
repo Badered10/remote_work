@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:06:37 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 17:57:51 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/08 15:49:45 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,5 @@ void	show_err(char *argv)
 	free(err);
 	free(display);
 	free_double(cmd);
-	exit(NOT_FOUND);
+	exit(EXIT_FAILURE);
 }

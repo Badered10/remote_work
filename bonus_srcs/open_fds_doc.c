@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:09:05 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 17:57:38 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/08 15:51:19 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@ t_fd	open_fds_doc(int argc, char **argv)
 		else
 			print_err("pipex: permission denied: ", argv[argc - 1]);
 		doc_fd.check_out = -1;
+		doc_fd.check_in = -1;
 		exit(EXIT_FAILURE);
 	}
 	fd1 = open("tmp.txt", O_CREAT | O_RDONLY, 0777);
 	dup_2(fd1, 0, 0);
 	doc_fd.check_out = 0;
-	doc_fd.check_in = 0;
+	doc_fd.check_in = -1;
 	return (doc_fd);
 }
