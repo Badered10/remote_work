@@ -1,8 +1,0 @@
-executable_path=./pipex
-
-
-
-ptr_munge=
-main_stack=
-executable_file=0x100000b,0x2f40cb
-dyld_file=0x1901000007,0x3000ac84b

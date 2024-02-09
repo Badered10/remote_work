@@ -6,13 +6,13 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/08 23:08:20 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:08:53 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/pipex.h"
 
-int	main(int argc, char **argv, char **env ,char **kill)
+int	main(int argc, char **argv, char **env)
 {
 	int		cmds;
 	t_fd	fd;
@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **env ,char **kill)
 	int		here_doc_check;
 
 
-	printf("------------>%s\n",*kill);
+	fprintf(stderr,"parent pid: %d\n",getpid());
 	if (argc < 5)
 		return (ft_putstr_fd("Not enough arguments !\n", 2), 1);
 	cmds = argc - (4);
@@ -34,6 +34,8 @@ int	main(int argc, char **argv, char **env ,char **kill)
 		;
 	if (!cmd_path(argv[argc - 2], env))
 		return (NOT_FOUND);
+
+	// while(1);
 	// system("leaks pipex");
 	return (0);
 }

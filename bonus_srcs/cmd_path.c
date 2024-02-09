@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:07:20 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/08 22:34:53 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:15:08 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,18 @@ char	*cmd_path(char *argv, char **env)
 	cmd = ft_split(argv, ' ');
 	if (!*cmd)
 	{
-		// fprintf(stderr,"---------------------> 0\n");
-		return (ft_strdup(""));
+		fprintf(stderr,"---------------------> 0  cmd : |%s| argv: |%s| , pid: %d return always (cat) \n",*cmd, argv, getpid());
+		return (free_double(cmd),free_double(paths),ft_strdup("cat"));
 	}
 	else if (*argv == '/' && access(*cmd, X_OK) == 0)
 	{
-		return (ft_strdup(*cmd));
-		// fprintf(stderr,"---------------------> 1\n");
+		fprintf(stderr,"---------------------> 1  cmd : |%s| argv: |%s| , pid: %d \n",*cmd, argv, getpid());
+		return (free_double(paths),free_double(cmd),get_command(argv));
 	}
 	else if(access(*cmd, F_OK) == 0)
 	{
-		return (ft_strdup(*cmd));
+		fprintf(stderr,"---------------------> 2 cmd : |%s| argv: |%s| , pid: %d\n",*cmd, argv, getpid());
+		return (free_double(paths),free_double(cmd),get_command(argv));
 	}
 	else
 	{
@@ -47,6 +48,6 @@ char	*cmd_path(char *argv, char **env)
 			// fprintf(stderr,"---------------------> 2 , |fullpath:%s| |cmd:%s|\n",fullpath, *cmd);			
 		}
 	}
-		// fprintf(stderr,"---------------------> 3 , |%s| \n",fullpath);
-	return (free_double(cmd),fullpath);
+		fprintf(stderr,"---------------------> 3 cmd : |%s| argv: |%s| , pid: %d\n",*cmd, argv, getpid());
+	return (free_double(cmd),free_double(paths),fullpath);
 }
