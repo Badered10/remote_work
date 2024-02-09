@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:15:09 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/08 21:07:17 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/09 23:34:07 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,18 @@ int	here_doc(char **argv, int *i, int *cmds)
 
 	doc = ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1]));
 	read_buf[0] = '\0';
+	printf("%s\n",read_buf);
 	if (!doc)
 	{
 		while (ft_strncmp(argv[2], read_buf, (ft_strlen(read_buf) - 1)))
 		{
 			pipetimes = (*cmds) - 1;
-			while (pipetimes--)
-				write(1, "pipe ", 5);
-			write(1, "heredoc> ", sizeof("heredoc> "));
+			if (read_buf[0] != '\0')
+			{
+				while (pipetimes--)
+					write(1, "pipe ", 5);
+				write(1, "heredoc> ", sizeof("heredoc> "));
+			}
 			bytes_readed = read(0, read_buf, MAX_INPUT);
 			read_buf[bytes_readed] = 0;
 		}
