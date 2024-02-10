@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:14:27 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 22:21:04 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/10 15:31:53 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	child(t_fd fd, char *argv, char **env, int mod)
 	}
 	if (id == 0)
 	{
-		// fprintf(stderr,"child pid: %d\n",getpid());
 		fd_duper(fd, mod, pfd);
 		// while(1);
 		call_execev(env, argv);

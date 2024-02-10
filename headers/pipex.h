@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 22:39:30 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/10 00:16:26 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	fd_duper(t_fd fd, int mod, int *pfd);
 void	free_double(char **ptr);
 char	*get_command(char *argv);
 char	**get_env_paths(char **env);
-int		here_doc(char **argv, int *i, int *cmds);
+void	here_doc(t_fd fd, char **argv, int *i, int *cmds);
 t_fd	open_fds_doc(int argc, char **argv);
 t_fd	open_fds(int argc,char **argv, char **env ,int here_doc_check);
 void	open_pipe(int *pfd);

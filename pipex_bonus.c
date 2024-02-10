@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 23:12:22 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/10 15:31:49 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,17 @@ int	main(int argc, char **argv, char **env)
 	int		cmds;
 	t_fd	fd;
 	int		i;
-	int		here_doc_check;
+	int		doc;
 
+	i = 0;
+	doc = ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1]));
 	if (argc < 5)
 		return (ft_putstr_fd("Not enough arguments !\n", 2), 1);
 	cmds = argc - (4);
-	here_doc_check = here_doc(argv, &i, &cmds);
+	fd = open_fds( argc, argv ,env , doc);
+	if (!doc)
+		here_doc(fd ,argv, &i, &cmds);
 	i += 2;
-	fd = open_fds( argc, argv ,env , here_doc_check);
-	// while(1);
 	while (cmds--)
 		child(fd, argv[i++], env, 0);
 	child(fd, argv[i], env, 1);
@@ -33,7 +35,6 @@ int	main(int argc, char **argv, char **env)
 		;
 	if (!cmd_path(argv[argc - 2], env))
 		return (NOT_FOUND);
-	// system("leaks pipex");
 	return (0);
 }
 
