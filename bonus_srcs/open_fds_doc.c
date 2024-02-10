@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:09:05 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/10 00:23:09 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/10 23:25:23 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,9 @@ t_fd	open_fds_doc(int argc, char **argv)
 		doc_fd.check_out = -1;
 		exit(EXIT_FAILURE);
 	}
-	doc_fd.infile = open("tmp.txt", O_CREAT | O_RDWR | O_APPEND, 0777);
+	doc_fd.infile = open(".tmp.txt", O_CREAT | O_RDWR | O_APPEND, 0777);
 	if (doc_fd.infile < 0)
 	{
-		doc_fd.check_in = -1;
 		perror("here_doc failed to get input");
 		exit(EXIT_FAILURE);
 	}

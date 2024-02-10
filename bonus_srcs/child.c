@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:14:27 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/10 15:31:53 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/10 23:21:03 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ void	child(t_fd fd, char *argv, char **env, int mod)
 		// wait(NULL); /// to remvoe 
 		close(pfd[1]);
 		dup_2(pfd[0], 0, 3);
-		unlink("tmp.txt");
+		unlink(".tmp.txt");
 	}
 }
