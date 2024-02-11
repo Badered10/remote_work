@@ -6,27 +6,35 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/10 00:16:26 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 00:57:24 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-#include "../headers/libft.h"
-#include <errno.h>
-#include <limits.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+# include "../headers/libft.h"
+# include <errno.h>
+# include <limits.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
-# ifndef LAST_CMD
-#  define LAST_CMD 1
-# endif
-
-# ifndef NOT_FOUND
-#  define NOT_FOUND 127
-# endif
-
+/*
+	Flag to tell child() its now the last command to write
+		the output to the outfile; output taken perviousely from pipe.
+*/
+# define LAST_CMD 1
+/*
+	Stands for argv[2], to start from the fisrt
+		command (cmds - 1) times to exclude the last command.
+*/
+# define OUTFILE_CHECK 2
+/*
+	Stands for argv[3], to start from the second
+		command (cmds - 1) times to exclude the first command.
+*/
+# define INFILE_CHECK 3
+# define NOT_FOUND 127
 
 typedef struct s_openfd
 {
@@ -35,25 +43,42 @@ typedef struct s_openfd
 	int	infile;
 	int	outfile;
 }				t_fd;
-
-void	call_execev(char **env, char *argv);
-char	*check_path(char *path, char *cmd);
-void	child(t_fd fd, char *argv, char **env, int mod);
-char	*cmd_path(char *argv, char **env);
+/*
+	Open fds for "Multiple pipes" case.
+*/
 int		creat_infile_fd(int argc, t_fd *fd, char **argv, char **env);
 int		creat_outfile_fd(int argc, t_fd *fd, char **argv, char **env);
-int		dup_2(int old, int new, int mod);
-void	fd_duper(t_fd fd, int mod, int *pfd);
-void	free_double(char **ptr);
+/*
+	Open fds for "her_doc" case.
+*/
+void	here_doc(t_fd *fd, char **argv, int *i, int *cmds);
+t_fd	open_fds_doc(int argc, char **argv, char **env);
+t_fd	open_fds(int argc, char **argv, char **env, int here_doc_check);
+/*
+	Commands funcs.
+*/
+char	*add_slash_cmd(char *path, char *cmd);
+char	*get_fullpath(char *argv, char **env);
 char	*get_command(char *argv);
 char	**get_env_paths(char **env);
-void	here_doc(t_fd fd, char **argv, int *i, int *cmds);
-t_fd	open_fds_doc(int argc, char **argv);
-t_fd	open_fds(int argc,char **argv, char **env ,int here_doc_check);
+void	check_cmds(int i, int argc, char **argv, char **env);
+/*
+	Safe dup2 that close the old fd after dup it to new.
+*/
+int		dup_2(int old, int new, int mod);
+/*
+	Child process funcs.
+*/
+void	child(t_fd fd, char *argv, char **env, int mod);
 void	open_pipe(int *pfd);
-void	print_err(char *message, char *word);
-void	check_cmds_outfile(int i , int argc ,char **argv,char **env);
+void	fd_duper(t_fd fd, int mod, int *pfd);
+void	call_execev(char **env, char *argv);
+/*
+	Tools funcs.
+*/
 int		strings_count(char **str);
-void 	check_split(char **cmd);
+void	check_split(char **cmd);
+void	free_double(char **ptr);
+void	print_err(char *message, char *word);
 
 #endif

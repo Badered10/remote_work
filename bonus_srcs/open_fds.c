@@ -6,13 +6,13 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:11:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/10 00:27:28 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 00:23:38 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/pipex.h"
 
-t_fd	open_fds(int argc,char **argv, char **env ,int here_doc_check)
+t_fd	open_fds(int argc, char **argv, char **env, int here_doc_check)
 {
 	t_fd	fd;
 	int		fd1;
@@ -33,5 +33,5 @@ t_fd	open_fds(int argc,char **argv, char **env ,int here_doc_check)
 		return (fd);
 	}
 	else
-		return (open_fds_doc(argc, argv));
+		return (open_fds_doc(argc, argv, env));
 }

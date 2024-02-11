@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_path.c                                         :+:      :+:    :+:   */
+/*   get_fullpath.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:07:20 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 22:26:30 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 01:00:17 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/pipex.h"
 
-static char *founded_cmd(char *argv, char **paths, char **cmd)
+static char	*founded_cmd(char *argv, char **paths, char **cmd)
 {
-	char *fullpath;
-	
+	char	*fullpath;
+
 	fullpath = get_command(argv);
-		if (!fullpath)
-		{
-			free_double(paths);
-			free_double(cmd);
-			exit(EXIT_FAILURE);
-		}
-		return (free_double(paths),free_double(cmd),fullpath);
+	if (!fullpath)
+	{
+		free_double(paths);
+		free_double(cmd);
+		exit(EXIT_FAILURE);
+	}
+	return (free_double(paths), free_double(cmd), fullpath);
 }
-char	*cmd_path(char *argv, char **env)
+
+char	*get_fullpath(char *argv, char **env)
 {
 	int		paths_num;
 	char	**cmd;
@@ -40,16 +41,15 @@ char	*cmd_path(char *argv, char **env)
 	cmd = ft_split(argv, ' ');
 	check_split(cmd);
 	if (!*cmd)
-		return (free_double(cmd),free_double(paths),ft_strdup(""));
+		return (free_double(cmd), free_double(paths), ft_strdup(""));
 	else if (*argv == '/' && access(*cmd, X_OK) == 0)
 		return (founded_cmd(argv, paths, cmd));
-	else if(access(*cmd, F_OK) == 0)
-			return (founded_cmd(argv, paths, cmd));
+	else if (access(*cmd, F_OK) == 0)
+		return (founded_cmd(argv, paths, cmd));
 	else
 	{
 		while (paths_num-- > 0 && !fullpath)
-			fullpath = check_path(paths[i++], *cmd);
+			fullpath = add_slash_cmd(paths[i++], *cmd);
 	}
-	return (free_double(cmd),free_double(paths),fullpath);
+	return (free_double(cmd), free_double(paths), fullpath);
 }
-

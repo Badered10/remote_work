@@ -14,9 +14,9 @@
 
 void	free_double(char **ptr)
 {
-	int i;
+	int	i;
 
-	i  = 0;
+	i = 0;
 	while (ptr[i])
 	{
 		free(ptr[i]);

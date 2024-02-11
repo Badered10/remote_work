@@ -22,6 +22,6 @@ char	**get_env_paths(char **env)
 		return (NULL);
 	res = ft_split(*env, ':');
 	check_split(res);
-	ft_memmove(*res,ft_strchr(*res, '/'),ft_strlen(*res));
+	ft_memmove(*res, ft_strchr(*res, '/'), ft_strlen(*res));
 	return (res);
 }

@@ -6,17 +6,17 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 21:20:47 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 21:26:33 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 00:59:28 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/pipex.h"
 
-void check_split(char **cmd)
+void	check_split(char **cmd)
 {
 	if (!cmd)
 	{
-		print_err("malloc failed in ft_split !!",NULL);
+		print_err("malloc failed in ft_split !!", NULL);
 		exit(EXIT_FAILURE);
 	}
 }

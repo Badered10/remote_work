@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:11:00 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 22:40:33 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 00:29:20 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ int	creat_infile_fd(int argc, t_fd *fd, char **argv, char **env)
 			print_err("pipex: no such file or directory: ", argv[1]);
 		else
 			print_err("pipex: permission denied: ", argv[1]);
-		check_cmds_outfile(3,argc ,argv,env);
+		check_cmds(INFILE_CHECK, argc, argv, env);
 		return (-1);
 	}
+	else
+		check_cmds(INFILE_CHECK, argc, argv, env);
 	return (0);
 }

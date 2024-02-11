@@ -6,7 +6,7 @@
 #    By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 15:58:29 by baouragh          #+#    #+#              #
-#    Updated: 2024/02/09 22:36:17 by baouragh         ###   ########.fr        #
+#    Updated: 2024/02/11 00:43:13 by baouragh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,12 +18,12 @@ MAKE = make -C libft
 
 SRCS = mandatory/
 		
-BONUS_S = bonus_srcs/call_execve.c bonus_srcs/check_paths.c bonus_srcs/child.c \
-		bonus_srcs/cmd_path.c bonus_srcs/creat_infile_fd.c bonus_srcs/creat_outfile_fd.c\
+BONUS_S = bonus_srcs/call_execve.c bonus_srcs/add_slash_cmd.c bonus_srcs/child.c \
+		bonus_srcs/get_fullpath.c bonus_srcs/creat_infile_fd.c bonus_srcs/creat_outfile_fd.c\
 		bonus_srcs/dup_2.c bonus_srcs/fd_duper.c bonus_srcs/free_double.c \
 		bonus_srcs/get_command.c bonus_srcs/get_env_paths.c bonus_srcs/here_doc.c\
 		bonus_srcs/open_fds.c bonus_srcs/open_fds_doc.c bonus_srcs/open_pipe.c \
-		bonus_srcs/print_err.c bonus_srcs/check_cmds_outfile.c bonus_srcs/strings_count.c \
+		bonus_srcs/print_err.c bonus_srcs/check_cmds.c bonus_srcs/strings_count.c \
 		bonus_srcs/check_split.c
 
 OBJS = $(SRCS:.c=.o)
