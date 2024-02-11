@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 01:30:09 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 02:34:32 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
+# define INVALID_ARGUMENTS 10 
+/*
+	Flag to tell open_fds() taht there is no here_doc here because its jut a mandatory !
+*/
+# define Madantory -1
 /*
 	Flag to tell child() its now the last command to write
 		the output to the outfile; output taken perviousely from pipe.

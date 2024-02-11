@@ -6,7 +6,7 @@
 #    By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 15:58:29 by baouragh          #+#    #+#              #
-#    Updated: 2024/02/11 02:08:20 by baouragh         ###   ########.fr        #
+#    Updated: 2024/02/11 02:45:37 by baouragh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,47 +15,46 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 MAKE = make -C libft
-
-SRCS = mandatory/
 		
-BONUS_S =  	bonus/commands/add_slash_cmd.c  bonus/commands/check_cmds.c bonus/commands/get_command.c bonus/commands/get_env_paths.c bonus/commands/get_fullpath.c \
+SRCS =  	bonus/commands/add_slash_cmd.c  bonus/commands/check_cmds.c bonus/commands/get_command.c bonus/commands/get_env_paths.c bonus/commands/get_fullpath.c \
 			bonus/tools/check_split.c bonus/tools/dup_2.c bonus/tools/free_double.c bonus/tools/print_err.c bonus/tools/strings_count.c \
-			bonus/Multiple_pipes/creat_infile_fd.c bonus/Multiple_pipes/creat_outfile_fd.c bonus/Multiple_pipes/open_fds.c \
+			bonus/fds_manage/creat_infile_fd.c bonus/fds_manage/creat_outfile_fd.c bonus/fds_manage/open_fds.c \
  			bonus/child/call_execve.c bonus/child/child.c bonus/child/fd_duper.c bonus/child/open_pipe.c \
 			bonus/here_doc/here_doc.c bonus/here_doc/open_fds_doc.c \
 
 OBJS = $(SRCS:.c=.o)
-BONUS_O = $(BONUS_S:.c=.o)
 
 CP = cp libft/libft.a ./$(NAME)
 
 NAME = pipex.a
 
-PROGRAMME_NAME = pipex
+MADANTORY = pipex
 
-all: $(NAME)
+BONUS_PIPEX = pipex_bonus
 
-$(NAME): $(OBJS)
+all: $(MADANTORY)
+
+$(MADANTORY): $(OBJS)
 	$(MAKE)
 	$(CP)
 	ar -rcs $(NAME) $(OBJS)
-	$(CC) $(CFLAGS) $(NAME) pipex_bonus.c -o $(PROGRAMME_NAME)
+	$(CC) $(CFLAGS) $(NAME) pipex.c -o $(MADANTORY)
 	
-bonus: $(PROGRAMME_NAME)
+bonus: $(BONUS_PIPEX)
 
-$(PROGRAMME_NAME): $(BONUS_O)
+$(BONUS_PIPEX): $(OBJS)
 	$(MAKE)
 	$(CP)
-	ar -rcs $(NAME) $(BONUS_O)
-	$(CC) $(CFLAGS) $(NAME) pipex_bonus.c -o $(PROGRAMME_NAME)
+	ar -rcs $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) $(NAME) pipex_bonus.c -o $(BONUS_PIPEX)
 
 clean:
 	$(MAKE) clean
-	rm -f $(OBJS) $(BONUS_O)
+	rm -f $(OBJS) $(OBJS)
 
 fclean: clean
 	$(MAKE) fclean
-	rm -rf $(NAME) $(PROGRAMME_NAME)
+	rm -rf $(NAME) $(MADANTORY) $(BONUS_PIPEX)
 
 re: fclean all
  
