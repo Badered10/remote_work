@@ -6,7 +6,7 @@
 #    By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/07 17:33:58 by baouragh          #+#    #+#              #
-#    Updated: 2024/02/07 18:55:36 by baouragh         ###   ########.fr        #
+#    Updated: 2024/02/11 02:01:12 by baouragh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,16 +30,10 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	ar -rc $(NAME) $(OBJS)
-
-$(OBJS): $(SRCS)
-	$(CC) $(CFLAGS) -c $(SRCS)
-	
-$(BONUS): $(SRC_B)
-	$(CC) $(CFLAGS) -c $(SRC_B)
-	ar -rc $(NAME) $(BONUS)
 	
 bonus: $(BONUS)
-
+	ar -rc $(NAME) $(BONUS)
+	
 clean:
 	rm -f $(OBJS) $(BONUS)
 

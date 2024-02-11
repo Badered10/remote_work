@@ -6,11 +6,11 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:14:07 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 00:59:16 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 01:33:00 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
 void	call_execev(char **env, char *argv)
 {

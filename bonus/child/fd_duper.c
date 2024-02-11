@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child.c                                            :+:      :+:    :+:   */
+/*   fd_duper.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:14:27 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 00:59:43 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/07 16:12:23 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:33:08 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-void	child(t_fd fd, char *argv, char **env, int mod)
+void	fd_duper(t_fd fd, int mod, int *pfd)
 {
-	int	id;
-	int	pfd[2];
-
-	open_pipe(pfd);
-	id = fork();
-	if (id < 0)
+	if (mod == LAST_CMD)
 	{
-		print_err("pipex: error occuerd with fork!", NULL);
-		exit(EXIT_FAILURE);
-	}
-	if (id == 0)
-	{
-		fd_duper(fd, mod, pfd);
-		call_execev(env, argv);
+		close(pfd[1]);
+		close(pfd[0]);
+		if (dup_2(fd.outfile, 1, 1))
+			exit(EXIT_FAILURE);
 	}
 	else
 	{
-		close(pfd[1]);
-		dup_2(pfd[0], 0, 3);
-		unlink(".tmp.txt");
+		close(fd.outfile);
+		close(pfd[0]);
+		if (dup_2(pfd[1], 1, 3))
+			exit(EXIT_FAILURE);
 	}
 }

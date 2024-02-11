@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_env_paths.c                                    :+:      :+:    :+:   */
+/*   print_err.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:03:04 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 21:24:33 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/07 16:07:44 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:33:48 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-char	**get_env_paths(char **env)
+void	print_err(char *message, char *word)
 {
-	char	**res;
-
-	while (*env && !ft_strnstr(*env, "PATH", 5))
-		env++;
-	if (!*env)
-		return (NULL);
-	res = ft_split(*env, ':');
-	check_split(res);
-	ft_memmove(*res, ft_strchr(*res, '/'), ft_strlen(*res));
-	return (res);
+	ft_putstr_fd(message, 2);
+	ft_putstr_fd(word, 2);
+	write(2, "\n", 1);
 }

@@ -6,11 +6,11 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:15:09 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/10 23:42:31 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 01:32:30 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
 static void	open_hidden_file(t_fd *doc_fd)
 {

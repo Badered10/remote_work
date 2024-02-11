@@ -1,22 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_split.c                                      :+:      :+:    :+:   */
+/*   get_command.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 21:20:47 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 00:59:28 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/07 16:13:44 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:32:45 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-void	check_split(char **cmd)
+char	*get_command(char *argv)
 {
+	char	*cmd;
+	int		i;
+
+	i = 0;
+	while (argv[i] != ' ' && argv[i] != '\0')
+		i++;
+	cmd = malloc(i + 1);
 	if (!cmd)
 	{
-		print_err("malloc failed in ft_split !!", NULL);
-		exit(EXIT_FAILURE);
+		perror("malloc");
+		return (NULL);
 	}
+	ft_memmove(cmd, argv, i);
+	cmd[i] = '\0';
+	return (cmd);
 }

@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_err.c                                        :+:      :+:    :+:   */
+/*   open_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:07:44 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 17:57:46 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/07 16:13:08 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:33:13 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-void	print_err(char *message, char *word)
+void	open_pipe(int *pfd)
 {
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd(word, 2);
-	write(2, "\n", 1);
+	if (pipe(pfd))
+	{
+		perror("pipe:");
+		exit(errno);
+	}
 }

@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_command.c                                      :+:      :+:    :+:   */
+/*   get_env_paths.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:13:44 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/09 16:40:34 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/07 16:03:04 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:32:49 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-char	*get_command(char *argv)
+char	**get_env_paths(char **env)
 {
-	char	*cmd;
-	int		i;
+	char	**res;
 
-	i = 0;
-	while (argv[i] != ' ' && argv[i] != '\0')
-		i++;
-	cmd = malloc(i + 1);
-	if (!cmd)
-	{
-		perror("malloc");
+	while (*env && !ft_strnstr(*env, "PATH", 5))
+		env++;
+	if (!*env)
 		return (NULL);
-	}
-	ft_memmove(cmd, argv, i);
-	cmd[i] = '\0';
-	return (cmd);
+	res = ft_split(*env, ':');
+	check_split(res);
+	ft_memmove(*res, ft_strchr(*res, '/'), ft_strlen(*res));
+	return (res);
 }

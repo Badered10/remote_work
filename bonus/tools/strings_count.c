@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   open_pipe.c                                        :+:      :+:    :+:   */
+/*   strings_count.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:13:08 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 17:57:43 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/07 16:02:34 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:33:55 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-void	open_pipe(int *pfd)
+int	strings_count(char **str)
 {
-	if (pipe(pfd))
-	{
-		perror("pipe:");
-		exit(errno);
-	}
+	char	**save;
+
+	if (!str)
+		return (-1);
+	save = str;
+	while (*str)
+		str++;
+	return (str - save);
 }

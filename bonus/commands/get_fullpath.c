@@ -6,11 +6,11 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:07:20 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 01:00:17 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 01:32:55 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
 static char	*founded_cmd(char *argv, char **paths, char **cmd)
 {

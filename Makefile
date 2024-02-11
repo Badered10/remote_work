@@ -6,7 +6,7 @@
 #    By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 15:58:29 by baouragh          #+#    #+#              #
-#    Updated: 2024/02/11 00:43:13 by baouragh         ###   ########.fr        #
+#    Updated: 2024/02/11 02:08:20 by baouragh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,13 +18,11 @@ MAKE = make -C libft
 
 SRCS = mandatory/
 		
-BONUS_S = bonus_srcs/call_execve.c bonus_srcs/add_slash_cmd.c bonus_srcs/child.c \
-		bonus_srcs/get_fullpath.c bonus_srcs/creat_infile_fd.c bonus_srcs/creat_outfile_fd.c\
-		bonus_srcs/dup_2.c bonus_srcs/fd_duper.c bonus_srcs/free_double.c \
-		bonus_srcs/get_command.c bonus_srcs/get_env_paths.c bonus_srcs/here_doc.c\
-		bonus_srcs/open_fds.c bonus_srcs/open_fds_doc.c bonus_srcs/open_pipe.c \
-		bonus_srcs/print_err.c bonus_srcs/check_cmds.c bonus_srcs/strings_count.c \
-		bonus_srcs/check_split.c
+BONUS_S =  	bonus/commands/add_slash_cmd.c  bonus/commands/check_cmds.c bonus/commands/get_command.c bonus/commands/get_env_paths.c bonus/commands/get_fullpath.c \
+			bonus/tools/check_split.c bonus/tools/dup_2.c bonus/tools/free_double.c bonus/tools/print_err.c bonus/tools/strings_count.c \
+			bonus/Multiple_pipes/creat_infile_fd.c bonus/Multiple_pipes/creat_outfile_fd.c bonus/Multiple_pipes/open_fds.c \
+ 			bonus/child/call_execve.c bonus/child/child.c bonus/child/fd_duper.c bonus/child/open_pipe.c \
+			bonus/here_doc/here_doc.c bonus/here_doc/open_fds_doc.c \
 
 OBJS = $(SRCS:.c=.o)
 BONUS_O = $(BONUS_S:.c=.o)
@@ -41,6 +39,7 @@ $(NAME): $(OBJS)
 	$(MAKE)
 	$(CP)
 	ar -rcs $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) $(NAME) pipex_bonus.c -o $(PROGRAMME_NAME)
 	
 bonus: $(PROGRAMME_NAME)
 

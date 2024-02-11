@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_slash_cmd.c                                    :+:      :+:    :+:   */
+/*   check_split.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:03:43 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 00:58:42 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/09 21:20:47 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:33:33 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-char	*add_slash_cmd(char *path, char *cmd)
+void	check_split(char **cmd)
 {
-	char	*a_path;
-	char	*fullpath;
-
-	a_path = (ft_strjoin(path, "/"));
-	fullpath = ft_strjoin(a_path, cmd);
-	if (!access(fullpath, X_OK))
-		return (free(a_path), fullpath);
-	else
-		return (free(fullpath), free(a_path), NULL);
+	if (!cmd)
+	{
+		print_err("malloc failed in ft_split !!", NULL);
+		exit(EXIT_FAILURE);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 00:57:24 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 01:30:09 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_openfd
 /*
 	Open fds for "Multiple pipes" case.
 */
+t_fd	open_fds(int argc, char **argv, char **env, int here_doc_check);
 int		creat_infile_fd(int argc, t_fd *fd, char **argv, char **env);
 int		creat_outfile_fd(int argc, t_fd *fd, char **argv, char **env);
 /*
@@ -53,7 +54,6 @@ int		creat_outfile_fd(int argc, t_fd *fd, char **argv, char **env);
 */
 void	here_doc(t_fd *fd, char **argv, int *i, int *cmds);
 t_fd	open_fds_doc(int argc, char **argv, char **env);
-t_fd	open_fds(int argc, char **argv, char **env, int here_doc_check);
 /*
 	Commands funcs.
 */
@@ -65,7 +65,6 @@ void	check_cmds(int i, int argc, char **argv, char **env);
 /*
 	Safe dup2 that close the old fd after dup it to new.
 */
-int		dup_2(int old, int new, int mod);
 /*
 	Child process funcs.
 */
@@ -76,6 +75,7 @@ void	call_execev(char **env, char *argv);
 /*
 	Tools funcs.
 */
+int		dup_2(int old, int new, int mod);
 int		strings_count(char **str);
 void	check_split(char **cmd);
 void	free_double(char **ptr);

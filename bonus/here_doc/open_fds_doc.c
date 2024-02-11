@@ -6,11 +6,11 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:09:05 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 00:29:24 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 01:31:46 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
 t_fd	open_fds_doc(int argc, char **argv, char **env)
 {

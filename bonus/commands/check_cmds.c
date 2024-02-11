@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fd_duper.c                                         :+:      :+:    :+:   */
+/*   check_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:12:23 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/07 17:57:26 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/07 16:06:37 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/11 01:32:40 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/pipex.h"
+#include "../../headers/pipex.h"
 
-void	fd_duper(t_fd fd, int mod, int *pfd)
+void	check_cmds(int i, int argc, char **argv, char **env)
 {
-	if (mod == LAST_CMD)
+	int		cmds;
+	char	*cmd;
+
+	cmds = argc - 4;
+	while (cmds--)
 	{
-		close(pfd[1]);
-		close(pfd[0]);
-		if (dup_2(fd.outfile, 1, 1))
-			exit(EXIT_FAILURE);
-	}
-	else
-	{
-		close(fd.outfile);
-		close(pfd[0]);
-		if (dup_2(pfd[1], 1, 3))
-			exit(EXIT_FAILURE);
+		cmd = get_fullpath(argv[i], env);
+		if (access(cmd, F_OK) && *argv[i] != '\0')
+			print_err("pipex: command not found: ", argv[i]);
+		else if (access(cmd, X_OK) && *argv[i] != '\0')
+			print_err("pipex: permission denied: ", argv[i]);
+		free(cmd);
+		i++;
 	}
 }
