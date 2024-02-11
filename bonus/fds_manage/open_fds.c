@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:11:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 02:28:12 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 09:44:19 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	open_hidden_file(void)
 {
-	int fd;
+	int	fd;
 
 	fd = open(".tmp.txt", O_CREAT | O_RDWR | O_APPEND, 0777);
 	if (fd < 0)

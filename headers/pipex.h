@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 02:34:32 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 09:51:45 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,17 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-# define INVALID_ARGUMENTS 10 
 /*
-	Flag to tell open_fds() taht there is no here_doc here because its jut a mandatory !
+	Flag stands for the exit value 10 in case
+		of the arguments are less or great than 5 for Mandotory,
+		In bonus case it just means less than 5.
 */
-# define Madantory -1
+# define INV_ARGS 10 
+/*
+	Flag to tell open_fds() taht there is 
+		no here_doc here because its jut a mandatory !
+*/
+# define MADANTORY -1
 /*
 	Flag to tell child() its now the last command to write
 		the output to the outfile; output taken perviousely from pipe.

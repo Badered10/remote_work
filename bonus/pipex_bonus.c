@@ -1,30 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 02:48:23 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/11 10:50:36 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "headers/pipex.h"
+#include "../headers/pipex.h"
 
 int	main(int argc, char **argv, char **env)
 {
 	int		cmds;
 	t_fd	fd;
 	int		i;
+	int		doc;
 
 	i = 0;
-	if (argc != 5)
-		return (print_err("Invaild number of arguments.\n Check how much args you enterd !, For successful run it must be 5 !",NULL),INVALID_ARGUMENTS);
+	doc = ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1]));
+	if (argc < 5)
+		return (ft_putstr_fd("Not enough arguments !", 2), INV_ARGS);
 	cmds = argc - (4);
-	fd = open_fds(argc, argv, env, Madantory);
+	if (!doc)
+		here_doc(&fd, argv, &i, &cmds);
+	fd = open_fds(argc, argv, env, doc);
 	i += 2;
-	child(fd, argv[i++], env, 0);
+	while (cmds--)
+		child(fd, argv[i++], env, 0);
 	child(fd, argv[i], env, 1);
 	while (waitpid(-1, NULL, 0) != -1)
 		;
