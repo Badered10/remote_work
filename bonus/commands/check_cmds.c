@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:06:37 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/12 11:08:43 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/12 12:00:56 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,20 @@ static void	check_sum_cases(int *index, int *cmds, int mod)
 {
 	if (*index == CHECK_ALL)
 	{
-		*cmds++;
-		*index = 2;
+		(*cmds)++;
+		(*index) = 2;
 	}
-	else if (*index & SKIP_FIRST)
-		*index = 3;
-	else if (*index & SKIP_LAST)
-		*index = 2;
-	else if (*index & SKIP_FL)
+	else if (*index == SKIP_FIRST)
+		(*index) = 3;
+	else if (*index == SKIP_LAST)
+		(*index) = 2;
+	else if (*index == SKIP_FAL)
 	{
-		*index = 3;
-		*cmds--;
+		(*index) = 3;
+		(*cmds)--;
 	}
 	if (mod)
-		*index ++;
+		(*index)++;
 }
 
 void	check_cmds(t_fd fd, int argc, char **argv, char **env)
@@ -62,7 +62,7 @@ void	check_cmds(t_fd fd, int argc, char **argv, char **env)
 	i = fd.check_sum;
 	mod = fd.i_place;
 	cmds = argc - 4;
-	check_sum_cases(i, cmds, mod);
+	check_sum_cases(&i, &cmds, mod);
 	while (cmds--)
 	{
 		cmd = get_fullpath(argv[i], env);

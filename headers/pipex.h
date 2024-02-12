@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/12 11:04:44 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/12 11:52:20 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@
 # define CHECK_ALL 0
 # define SKIP_FIRST 1
 # define SKIP_LAST 3
-# define SKIP_FL 4
+# define SKIP_FAL 4
 
 typedef struct s_openfd
 {
