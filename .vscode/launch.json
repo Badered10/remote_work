@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/baouragh/Desktop/Studentsaveguard/remote_work/bonus",
-      "program": "/Users/baouragh/Desktop/Studentsaveguard/remote_work/bonus/build/Debug/outDebug"
+      "cwd": "/Users/baouragh/Desktop/Studentsaveguard/remote_work/mandatory_srcs",
+      "program": "/Users/baouragh/Desktop/Studentsaveguard/remote_work/mandatory_srcs/build/Debug/outDebug"
     }
   ]
 }
