@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:15:09 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 01:32:30 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/12 09:32:12 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	here_doc(t_fd *fd, char **argv, int *i, int *cmds)
 			break ;
 	}
 	fd_hidden = re_open_hidden_file(".tmp.txt");
-	dup_2(fd_hidden, 0, 0);
+	dup_2(fd_hidden, 0);
 	(*i) = 1;
 	(*cmds)--;
 }

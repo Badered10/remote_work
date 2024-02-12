@@ -6,7 +6,7 @@
 #    By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/07 17:33:58 by baouragh          #+#    #+#              #
-#    Updated: 2024/02/11 02:01:12 by baouragh         ###   ########.fr        #
+#    Updated: 2024/02/11 11:30:23 by baouragh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,19 +29,19 @@ NAME = libft.a
 all: $(NAME) 
 
 $(NAME): $(OBJS)
-	ar -rc $(NAME) $(OBJS)
+	@ar -rc $(NAME) $(OBJS)
 	
 bonus: $(BONUS)
-	ar -rc $(NAME) $(BONUS)
+	@ar -rc $(NAME) $(BONUS)
 	
 clean:
-	rm -f $(OBJS) $(BONUS)
+	@rm -f $(OBJS) $(BONUS)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all
 
 .PHONY: all re clean fclean bonus
 
-.SECONDARY : $(OBJS)
+.SECONDARY : $(OBJS) $(BONUS)

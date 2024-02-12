@@ -6,11 +6,48 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 10:50:50 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/12 10:17:05 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/pipex.h"
+
+static void	cmds_checker(t_fd fd, int argc, char **argv, char **env)
+{
+	fd.check_sum = fd.check_in + fd.check_out;
+	if (fd.i_place != 1)
+		check_cmds(fd, argc, argv, env);
+	else
+		check_cmds(fd, argc, argv, env);
+}
+
+static int	check_out_fd(int check, int argc, char **argv)
+{
+	if (check)
+	{
+		if (*argv[argc - 1] == '\0')
+			print_err("pipex: no such file or directory: ", argv[argc - 1]);
+		else
+			print_err("pipex: permission denied: ", argv[argc - 1]);
+		return (1);
+	}
+	return (0);
+}
+
+static int	check_last_cmd(char *cmd_set)
+{
+	char	*last_cmd;
+
+	last_cmd = get_command(cmd_set);
+	if (access(last_cmd, F_OK))
+		return (free(last_cmd), NOT_FOUND);
+	else
+	{
+		if (access(last_cmd, X_OK))
+			return (free(last_cmd), PERMISSION_DENIED);
+	}
+	return (0);
+}
 
 int	main(int argc, char **argv, char **env)
 {
@@ -23,18 +60,14 @@ int	main(int argc, char **argv, char **env)
 		return (print_err("Invaild number of args .", NULL), INV_ARGS);
 	cmds = argc - (4);
 	fd = open_fds(argc, argv, env, MADANTORY);
+	fd.i_place = i;
+	cmds_checker(fd, argc, argv, env);
 	i += 2;
 	child(fd, argv[i++], env, 0);
 	child(fd, argv[i], env, 1);
 	while (waitpid(-1, NULL, 0) != -1)
 		;
-	if (!get_fullpath(argv[argc - 2], env))
-		return (NOT_FOUND);
-	return (0);
+	if (!fd.check_out)
+		return (check_last_cmd(argv[argc - 2]));
+	return (check_out_fd(fd.check_out, argc, argv));
 }
-
-// case 7: in : true && cmd false && out : false : 0  solved !!!
-// to fix : add envp as arg solved !!!
-// ./ls --> CMD_false -->check if  / and check exe ,
-
-//  --> check exe directly  solved !!!

@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:11:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 09:44:19 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/12 10:28:04 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,14 @@ t_fd	open_fds(int argc, char **argv, char **env, int here_doc_check)
 
 	if (here_doc_check)
 	{
-		fd.check_in = creat_infile_fd(argc, &fd, argv, env);
-		fd.check_out = creat_outfile_fd(argc, &fd, argv, env);
-		if (fd.check_out)
-			exit(EXIT_FAILURE);
+		fd.check_in = create_infile_fd(&fd, argv);
+		fd.check_out = create_outfile_fd(argc, &fd, argv, env);
 		if (!fd.check_in)
-			dup_2(fd.infile, 0, 0);
+			dup_2(fd.infile, 0);
 		else
 		{
 			fd1 = open_hidden_file();
-			dup_2(fd1, 0, 0);
+			dup_2(fd1, 0);
 		}
 		return (fd);
 	}

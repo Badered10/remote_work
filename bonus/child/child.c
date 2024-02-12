@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:14:27 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/11 01:33:04 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/12 10:18:20 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	child(t_fd fd, char *argv, char **env, int mod)
 	else
 	{
 		close(pfd[1]);
-		dup_2(pfd[0], 0, 3);
+		dup_2(pfd[0], 0);
 		unlink(".tmp.txt");
 	}
 }
