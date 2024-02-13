@@ -6,7 +6,7 @@
 #    By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/07 17:33:58 by baouragh          #+#    #+#              #
-#    Updated: 2024/02/11 11:30:23 by baouragh         ###   ########.fr        #
+#    Updated: 2024/02/12 18:50:38 by baouragh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,10 +29,10 @@ NAME = libft.a
 all: $(NAME) 
 
 $(NAME): $(OBJS)
-	@ar -rc $(NAME) $(OBJS)
+	ar -rc $(NAME) $(OBJS)
 	
 bonus: $(BONUS)
-	@ar -rc $(NAME) $(BONUS)
+	ar -rc $(NAME) $(BONUS)
 	
 clean:
 	@rm -f $(OBJS) $(BONUS)

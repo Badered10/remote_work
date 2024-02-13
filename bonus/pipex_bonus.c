@@ -6,11 +6,20 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 09:45:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/12 16:18:28 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/13 19:04:39 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/pipex.h"
+
+static int	last_outfile_check(int argc, char **argv)
+{
+	int	len;
+
+	len = ft_strlen(argv[argc - 2]) + ft_strlen(argv[argc -1]);
+	len = ft_strncmp(argv[argc - 2], argv[argc - 1], len);
+	return (len);
+}
 
 static void	cmds_checker(t_fd fd, int argc, char **argv, char **env)
 {
@@ -34,12 +43,12 @@ static int	check_out_fd(int check, int argc, char **argv)
 	return (0);
 }
 
-static int	check_last_cmd(char *cmd_set)
+static int	check_last_cmd(char *cmd_set, int not_same)
 {
 	char	*last_cmd;
 
 	last_cmd = get_command(cmd_set);
-	if (access(last_cmd, F_OK))
+	if (access(last_cmd, F_OK) || !not_same)
 		return (free(last_cmd), NOT_FOUND);
 	else
 	{
@@ -72,8 +81,9 @@ int	main(int argc, char **argv, char **env)
 	child(fd, argv[i], env, 1);
 	while (waitpid(-1, NULL, 0) != -1)
 		;
+	i = last_outfile_check(argc, argv);
 	if (!fd.check_out)
-		return (check_last_cmd(argv[argc - 2]));
+		return (check_last_cmd(argv[argc - 2], i));
 	return (check_out_fd(fd.check_out, argc, argv));
 }
 
