@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_infile_fd.c                                 :+:      :+:    :+:   */
+/*   last_outfile_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:11:00 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/13 22:54:41 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/14 13:50:21 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/14 14:22:48 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/pipex.h"
 
-int	create_infile_fd(t_fd *fd, char **argv)
+int	last_outfile_check(int argc, char **argv)
 {
-	fd->infile = open(argv[1], O_RDONLY);
-	if (fd->infile < 0)
-	{
-		if (access(argv[1], F_OK))
-			print_err("pipex: no such file or directory: ", argv[1]);
-		else
-			print_err("pipex: permission denied: ", argv[1]);
-		fd->check_in = -1;
-		return (1);
-	}
-	return (0);
+	int	len;
+
+	len = ft_strlen(argv[argc - 2]) + ft_strlen(argv[argc -1]);
+	len = ft_strncmp(argv[argc - 2], argv[argc - 1], len);
+	return (len);
 }

@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 09:24:48 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/12 11:52:20 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/14 14:25:13 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ char	*get_fullpath(char *argv, char **env);
 char	*get_command(char *argv);
 char	**get_env_paths(char **env);
 void	check_cmds(t_fd fd, int argc, char **argv, char **env);
+void	cmd_mod_check(t_fd fd, int argc, char **argv, char **env);
+void	skip_first(t_fd *fd, int *i, int *cmds);
 /*
 	Safe dup2 that close the old fd after dup it to new.
 */
@@ -90,6 +92,13 @@ void	child(t_fd fd, char *argv, char **env, int mod);
 void	open_pipe(int *pfd);
 void	fd_duper(t_fd fd, int mod, int *pfd);
 void	call_execev(char **env, char *argv);
+/*
+	Return value funcs.
+*/
+int		check_out_fd(int check, int argc, char **argv);
+int		last_outfile_check(int argc, char **argv);
+int		return_value(t_fd fd, int argc, char **argv, char **env);
+int		check_last_cmd(char *cmd_set, int not_same, char **env);
 /*
 	Tools funcs.
 */

@@ -6,7 +6,7 @@
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:11:53 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/12 10:28:04 by baouragh         ###   ########.fr       */
+/*   Updated: 2024/02/13 22:55:24 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_fd	open_fds(int argc, char **argv, char **env, int here_doc_check)
 		{
 			fd1 = open_hidden_file();
 			dup_2(fd1, 0);
+			fd.check_in = 1;
 		}
 		return (fd);
 	}

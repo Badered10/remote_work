@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_infile_fd.c                                 :+:      :+:    :+:   */
+/*   cmd_mod_check.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baouragh <baouragh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:11:00 by baouragh          #+#    #+#             */
-/*   Updated: 2024/02/13 22:54:41 by baouragh         ###   ########.fr       */
+/*   Created: 2024/02/14 13:53:38 by baouragh          #+#    #+#             */
+/*   Updated: 2024/02/14 14:22:34 by baouragh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/pipex.h"
 
-int	create_infile_fd(t_fd *fd, char **argv)
+void	cmd_mod_check(t_fd fd, int argc, char **argv, char **env)
 {
-	fd->infile = open(argv[1], O_RDONLY);
-	if (fd->infile < 0)
-	{
-		if (access(argv[1], F_OK))
-			print_err("pipex: no such file or directory: ", argv[1]);
-		else
-			print_err("pipex: permission denied: ", argv[1]);
-		fd->check_in = -1;
-		return (1);
-	}
-	return (0);
+	fd.check_sum = fd.check_in + fd.check_out;
+	check_cmds(fd, argc, argv, env);
 }
